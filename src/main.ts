@@ -1,4 +1,6 @@
 import readline from 'readline';
+import { OperationFactory } from './operations/operation-factory';
+import { State } from './state';
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -6,12 +8,17 @@ const rl = readline.createInterface({
   terminal: false
 });
 
+let state = new State();
+
 export function setState() {
-   //TODO: Inicializar la clase que guarda el estado de la cuenta
+  state = new State();
 }
 
 export function processOperation(operation, log) {
-  //TODO: Crear el comando y usar la funcion log para imprimir el resultado de la operacion
+  const command = OperationFactory.createOperation(operation);
+  command.setData(state.account);
+  state.step(command);
+  log(state.account.getResponse());
 }
 
 rl.on('line', function(line){
